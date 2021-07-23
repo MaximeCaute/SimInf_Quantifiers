@@ -1,4 +1,5 @@
 import itertools
+import numpy as np
 
 #from GeneralizedQuantifierModel import SimplifiedQuantifierModel
 from siminf.generalized_quantifier_model import SimplifiedQuantifierModel
@@ -16,7 +17,6 @@ def measure_informativeness(language, universe_size):
             utility += 1 / universe_size / word_amount / word_meaning_size
 
     return utility
-
 
 class InformativenessMeasurer(object):
 
@@ -63,3 +63,93 @@ class SimMaxInformativenessMeasurer(object):
                         utility += score / len(self.universe) / word_amount / word_meaning_size
 
         return utility
+
+def sum_to_one_by_row(matrix):
+    #Previous method returned a copy, although here we could keep it by ref?
+    matrix = matrix.copy()
+    rows_sum = matrix.sum(axis = 1)
+    for i in range(matrix.shape[0]):
+        if rows_sum[i] == 0:
+            matrix[i,:] += 1/matrix.shape[1]
+        else:
+            matrix[i,:] /= rows_sum[i]
+    #return matrix / matrix.sum(axis = 1, keepdims = True)
+    return matrix
+
+
+def compute_agent_matrices(
+        language, universe_size,
+        num_generations,
+        lambda_generation,
+        prior_over_states):
+    """
+    Computes Hearer and Speaker matrices as per Brochhagen
+    """
+
+    # Compute first generation here.
+    # Not done recursively for memory issues.
+    language_size = len(language)
+    hearer_matrix = np.zeros((language_size, universe_size))
+    speaker_matrix = np.zeros((universe_size, language_size))
+
+    # TODO: OPTIMIZE
+    for state in range(universe_size):
+        for i, word in enumerate(language):
+            if word.meaning[state]:
+                #TODO works because function is constant, but state is an int
+                hearer_matrix[i, state] = prior_over_states(state)
+                speaker_matrix[state,i] = np.exp(lambda_generation)
+            else:
+                hearer_matrix[i, state] = 0
+                speaker_matrix[state,i] = 1
+
+    hearer_matrix = sum_to_one_by_row(hearer_matrix)
+    speaker_matrix = sum_to_one_by_row(speaker_matrix)
+
+    # Later generations
+    for generation in range(num_generations-1):
+        for state in range(universe_size):
+            for i in range(language_size):
+                hearer_matrix[i, state], speaker_matrix[state,i] = \
+                    prior_over_states(state) * speaker_matrix[state, i], \
+                    np.exp(lambda_generation * hearer_matrix[i,state])
+
+        hearer_matrix = sum_to_one_by_row(hearer_matrix)
+        speaker_matrix = sum_to_one_by_row(speaker_matrix)
+
+    return hearer_matrix, speaker_matrix
+
+class BrochhagenInformativenessMeasurer(object):
+    def __init__(self, universe, num_generations = 5, lambda_generation = 20):
+        self.universe = universe
+        self.num_generations = num_generations
+        self.lambda_generation = lambda_generation
+        self.utility_function = lambda state1, state2: 1/(1+distance(state1, state2))
+
+        self.prior_over_states = lambda state : 1/len(universe)
+
+    def __call__(self, language):
+        informativeness = 0
+
+        hearer_matrix, speaker_matrix = compute_agent_matrices(
+            language, len(self.universe),
+            self.num_generations, self.lambda_generation,
+            self.prior_over_states)
+
+        for state_index, state in enumerate(self.universe):
+            for word_index, word in enumerate(language):
+                for other_state_index, other_state in enumerate(self.universe):
+                    if word.meaning[other_state_index]:
+                        informativeness += (self.prior_over_states(state) *
+                                            speaker_matrix[state_index, word_index] *
+                                            hearer_matrix[word_index, other_state_index] *
+                                            self.utility_function(state,other_state))
+
+        return informativeness
+
+
+def get_informativeness_measurer(name, universe):
+    if name == "brochhagen":
+        return BrochhagenInformativenessMeasurer(universe)
+    #TODO excpetion
+    assert False

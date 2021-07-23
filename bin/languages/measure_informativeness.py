@@ -6,7 +6,7 @@ from siminf import experiment_setups
 from siminf import fileutil
 from siminf.fileutil import FileUtil
 from siminf.languages import language_loader
-from siminf.languages.informativeness_measurer import SimMaxInformativenessMeasurer, InformativenessMeasurer
+from siminf.languages.informativeness_measurer import SimMaxInformativenessMeasurer, InformativenessMeasurer, BrochhagenInformativenessMeasurer
 
 def main(args):
     setup = experiment_setups.parse(args.setup)
@@ -17,10 +17,12 @@ def main(args):
 
     universe = generator.generate_simplified_models(args.model_size)
 
-    if args.inf_strat == 'exact': 
+    if args.inf_strat == 'exact':
         informativeness_measurer = InformativenessMeasurer(len(universe))
     elif args.inf_strat == 'simmax':
         informativeness_measurer = SimMaxInformativenessMeasurer(universe)
+    elif args.inf_strat == "brochhagen":
+        informativeness_measurer = BrochhagenInformativenessMeasurer(universe)
     else:
         raise ValueError('{0} is not a valid informativeness strategy.'.format(args.inf_strat))
 
@@ -46,4 +48,3 @@ if __name__ == "__main__":
     #parse
     args = parser.parse_args()
     main(args)
-
