@@ -149,6 +149,8 @@ class BrochhagenInformativenessMeasurer(object):
 
 
 def get_informativeness_measurer(name, universe):
+    if name == "simmax":
+        return SimMaxInformativenessMeasurer(universe)
     if name == "brochhagen":
         return BrochhagenInformativenessMeasurer(universe)
     #TODO excpetion
