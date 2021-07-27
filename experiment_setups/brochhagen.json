@@ -3,6 +3,7 @@
   "name": "final",
   "pareto_name": "evolutionary",
   "natural_name": "natural_gradual",
+  "random_name": "random",
   "use_base_dir": "True",
 
   "lexical_quantifiers_filename": "English_quantifiers/logical.json",
@@ -12,7 +13,7 @@
   "expression_complexity_measurer": "siminf.measurer.measure_expression_complexity",
   "quantifier_complexity_measurer": "siminf.measurer.measure_complexity",
   "operators": [">f", "=f", ">", ">=", "=", "/", "subset", "intersection", "union", "card", "diff","+","-","and","or","not","%"],
-  
+
   "-------set up of quantifiers, sizes, etc-------": "",
   "max_quantifier_length": "8",
   "model_size": "6",
@@ -23,9 +24,9 @@
   "comp_strat": "wordcomplexity",
   "inf_strat": "brochhagen",
   "max_words": 10,
-  
+
   "-------set up of results, etc-------": "",
-  
+
   "-------bin/languages/coinflip_languages specific-------": "",
   "random_size": "100",
   "fixedwordcount": "10",
