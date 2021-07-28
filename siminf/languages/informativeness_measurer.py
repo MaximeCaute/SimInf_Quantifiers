@@ -120,7 +120,7 @@ def compute_agent_matrices(
     return hearer_matrix, speaker_matrix
 
 class BrochhagenInformativenessMeasurer(object):
-    def __init__(self, universe, num_generations = 5, lambda_generation = 20):
+    def __init__(self, universe, num_generations = 5, lambda_generation = 400):
         self.universe = universe
         self.num_generations = num_generations
         self.lambda_generation = lambda_generation
