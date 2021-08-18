@@ -8,9 +8,19 @@ def measure_complexity(quantifier, max_length):
     return (measure_expression_complexity(quantifier.expression, max_length) +
             measure_expression_complexity(quantifier.presupposition, max_length)) / 2
 
+def expression_weights(name):
+    ## Cast because names have different types
+    if isinstance(name,int):
+        return 1+abs(name)
+    if name == "not":
+        return 5
+    return 1
 
 def measure_expression_complexity(expression, max_length):
-    return expression.length()/max_length if expression is not None else 0
+    #return expression.length(weight_evaluation = expression_weights)/max_length \
+    return expression.length()/max_length \
+            if expression is not None \
+            else 0
 
 # def measure_relative_communicative_cost(quantifier, universe):
 #     true_count = 0
