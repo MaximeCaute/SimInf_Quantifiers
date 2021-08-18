@@ -54,6 +54,9 @@ class FileUtil(object):
     def load_pandas_csv(self, filename):
         return pandas.read_csv(self.full_path('tables/{0}'.format(filename)))
 
+    def read_stringlist(self, filename):
+         return pandas.read_csv('{0}/{1}'.format(self.folderName, filename), sep="\n", header=None)
+
     def exists(self, filename):
         return os.path.exists(self.full_path(filename))
 
