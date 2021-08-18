@@ -17,7 +17,9 @@ from siminf.languages.informativeness_measurer import get_informativeness_measur
 def remove(language, expressions=None):
     # the expressions argument is added so that the function
     # has the same signature as that of function add and interchange
-    language = copy(language)
+    # For some reason, when using "empty" operator (likely because not enough elements?),
+    #   there is a chance that you have a tuple instead of a list...
+    language = copy(list(language))
     index = random.randint(0,len(language)-1)
     language.pop(index)
     return language
