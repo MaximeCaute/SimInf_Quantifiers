@@ -21,8 +21,8 @@ def make_plot(data, color_variable, filename):
 
 
 make_plot(natural_data, 'naturalness', 'naturalness_with_pareto.png')
-make_plot(random_data, 'monotonicity', 'monotonicity_with_pareto.png')
-make_plot(random_data, 'conservativity', 'conservativity_with_pareto.png')
+# make_plot(random_data, 'monotonicity', 'monotonicity_with_pareto.png')
+# make_plot(random_data, 'conservativity', 'conservativity_with_pareto.png')
 
 def standardize(data, cols):
     for col in cols:
@@ -55,8 +55,8 @@ def full_analysis(data, predictors, num_bootstrap_samples=5000):
 
 
 predictors = ['monotonicity', 'conservativity']
-print('random data')
-full_analysis(random_data, predictors)
+# print('random data')
+# full_analysis(random_data, predictors)
 print()
 print('natural data')
 full_analysis(natural_data, predictors + ['naturalness'])
