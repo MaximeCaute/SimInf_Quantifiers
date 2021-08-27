@@ -1,6 +1,5 @@
 from functools import lru_cache
 
-
 class Expression:
 
     def __init__(self, name, func, *arg_expressions, is_constant=None):
@@ -18,12 +17,12 @@ class Expression:
         if self.is_constant:
             self.constant_value = func(None,*[arg_expression.evaluate(None) for arg_expression in arg_expressions])
 
-    def length(self):
-        if self.internal_length is not None:
-            return self.internal_length
-        total_length = 1
+    def length(self, weight_evaluation = lambda x : 1):
+        # if self.internal_length is not None:
+        #     return self.internal_length
+        total_length =  weight_evaluation(self.name)
         for arg_expression in self.arg_expressions:
-            total_length += arg_expression.length()
+            total_length += arg_expression.length(weight_evaluation)
         self.internal_length = total_length
         return total_length
 
