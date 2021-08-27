@@ -5,12 +5,12 @@ from siminf.generalized_quantifier_model import *
 
 from itertools import chain, combinations
 
-from siminf.expression import * 
+from siminf.expression import *
 
 import numpy as np
 
-from siminf.quantifier import Quantifier 
-from siminf.set_place_holders import SetPlaceholder  
+from siminf.quantifier import Quantifier
+from siminf.set_place_holders import SetPlaceholder
 
 def powerset(iterable):
     s = list(iterable)
@@ -158,6 +158,13 @@ class ExpressionGenerator(object):
 
             new_expressions = copy(expressions[length][type])
             for (expression, meaning) in zip(new_expressions, new_meanings):
+                ## REMOVE Tautologies:
+                # if (type == bool and
+                #     (np.all([world_evaluation == True for world_evaluation in meaning]) or
+                #     np.all([world_evaluation == False for world_evaluation in meaning]))):
+                #     expressions[length][type].remove(expression)
+                #     continue
+
                 if meaning in expressions_by_meaning[type].keys():
                     other_expression = expressions_by_meaning[type][meaning]
 
