@@ -42,16 +42,16 @@ def full_analysis(data, predictors, num_bootstrap_samples=5000):
     # standardize(data, predictors + ['pareto_closeness', 'optimality'])
 
     for predictor in predictors:
-        print("%",predictor)
+        print(predictor)
         r, pvalue = scipy.stats.pearsonr(data['optimality'], data[predictor])
-        print("%",r, pvalue)
+        print(r, pvalue)
         for bootstrap_sample_percent in np.geomspace(0.01, 1.0, num=5):
             rs = []
             for _ in range(num_bootstrap_samples):
                 bootstrap_sample = data.sample(n=int(bootstrap_sample_percent*len(data)), replace=True)
                 r, _ = scipy.stats.pearsonr(bootstrap_sample['optimality'], bootstrap_sample[predictor])
                 rs.append(r)
-            print("%",scipy.stats.scoreatpercentile(rs, (2.5, 97.5)))
+            print(scipy.stats.scoreatpercentile(rs, (2.5, 97.5)))
 
 
 predictors = ['monotonicity', 'conservativity']
