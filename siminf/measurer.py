@@ -13,11 +13,16 @@ def expression_weights(name):
     if isinstance(name,int):
         return 1+abs(name)
     if name == "not":
-        return 5
+        return 2
+    return 1
+
+def brochhagen_expression_weights(name):
+    if name in ["not", "and"]:
+        return 2
     return 1
 
 def measure_expression_complexity(expression, max_length):
-    #return expression.length(weight_evaluation = expression_weights)/max_length \
+    # return expression.length(weight_evaluation = brochhagen_expression_weights)/max_length \
     return expression.length()/max_length \
             if expression is not None \
             else 0
