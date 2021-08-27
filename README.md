@@ -113,6 +113,9 @@ This will put the results of said code in results/[ExperimentSetupName]\_length=
 
 `python bin/languages/analysis/estimate_pareto.py --setup experiment_setups/final.json`
 `python bin/languages/analysis/analyze.py --setup experiment_setups/final.json`
+`python bin/languages/analysis/languages_analysis.py --setup experiment_setups/final.json`
+
+**To run all but the last script, you may run `sh reproduction.sh` instead**
 
 # TODOs
 
