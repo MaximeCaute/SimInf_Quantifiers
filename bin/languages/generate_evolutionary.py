@@ -25,7 +25,7 @@ def remove(language, expressions=None):
     return language
 
 def add(language, expressions):
-    language = copy(language)
+    language = copy(list(language))
     while True:
         new_expression = random.choice(expressions)
         if new_expression not in language:
